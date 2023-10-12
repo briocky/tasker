@@ -1,0 +1,2 @@
+INSERT INTO users (id, age, email, first_name, last_name, image_url, is_enabled, password) VALUES (1,22,'admin@wp.pl','Jan','Kowalski', null,true,'$2a$12$ZJ5CT6F9UsiHog2g3yX2cO8002iSk3f9uOi26jt7Ak9jRL2VvS4BO');
+SELECT setval('user_id_seq', COALESCE((SELECT MAX(id) FROM users), 1) + 1);
