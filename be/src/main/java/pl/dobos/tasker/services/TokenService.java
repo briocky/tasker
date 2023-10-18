@@ -6,10 +6,8 @@ import org.springframework.stereotype.Service;
 import pl.dobos.tasker.exceptions.AuthException;
 import pl.dobos.tasker.mappers.TokenMapper;
 import pl.dobos.tasker.models.dtos.RefreshTokenResponse;
-import pl.dobos.tasker.models.entities.AccessToken;
 import pl.dobos.tasker.models.entities.RefreshToken;
 import pl.dobos.tasker.models.entities.User;
-import pl.dobos.tasker.repositories.AccessTokenRepository;
 import pl.dobos.tasker.repositories.RefreshTokenRepository;
 import pl.dobos.tasker.repositories.UserRepository;
 
@@ -17,22 +15,15 @@ import pl.dobos.tasker.repositories.UserRepository;
 @RequiredArgsConstructor
 public class TokenService {
 
-  private final AccessTokenRepository accessTokenRepository;
+  private static final int MAX_REFRESH_TOKEN_USAGES = 2;
+
   private final JwtTokenUtils jwtTokenUtils;
   private final RefreshTokenRepository refreshTokenRepository;
   private final TokenMapper tokenMapper;
   private final UserRepository userRepository;
 
   public String getAccessToken(User tokenOwner) {
-
-    Optional<AccessToken> userAccessToken = accessTokenRepository.findByOwner(tokenOwner);
-    if (userAccessToken.isPresent() && !jwtTokenUtils.isTokenExpired(userAccessToken.get().getValue())) {
-      return userAccessToken.get().getValue();
-    }
-
-    String token = jwtTokenUtils.generateAccessToken(tokenOwner);
-    accessTokenRepository.save(tokenMapper.getAccessToken(token, tokenOwner));
-    return token;
+    return jwtTokenUtils.generateAccessToken(tokenOwner);
   }
 
   public String getRefreshToken(User tokenOwner) {
@@ -56,13 +47,15 @@ public class TokenService {
     String email = jwtTokenUtils.extractEmail(refreshToken);
     User userByEmail = userRepository.findByEmail(email)
         .orElseThrow(() -> new AuthException("No user with this refresh token"));
+    RefreshToken userRefreshToken = userByEmail.getRefreshToken();
+
+    if (userRefreshToken.getUsageCount() >= MAX_REFRESH_TOKEN_USAGES) {
+      throw new AuthException("Refresh token usage count exceeded");
+    }
+
     String token = jwtTokenUtils.generateAccessToken(userByEmail);
-    accessTokenRepository.findByOwner(userByEmail)
-      .ifPresent(accessToken -> {
-        userByEmail.setAccessToken(null);
-        accessTokenRepository.delete(accessToken);
-      });
-    accessTokenRepository.save(tokenMapper.getAccessToken(token, userByEmail));
+    userRefreshToken.setUsageCount(userRefreshToken.getUsageCount() + 1);
+    refreshTokenRepository.save(userRefreshToken);
 
     return RefreshTokenResponse.builder().token(token).build();
   }

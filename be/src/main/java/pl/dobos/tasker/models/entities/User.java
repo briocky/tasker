@@ -12,6 +12,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import java.util.Collection;
@@ -54,11 +55,11 @@ public class User implements UserDetails {
 
   boolean isEnabled;
 
-  @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+  @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
   List<Role> roles;
 
-  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "owner")
-  AccessToken accessToken;
+  @Transient
+  String accessToken;
 
   @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "owner")
   RefreshToken refreshToken;

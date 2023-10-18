@@ -10,9 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.filter.OncePerRequestFilter;
+import pl.dobos.tasker.models.entities.User;
 import pl.dobos.tasker.services.JwtTokenUtils;
 
 @RequiredArgsConstructor
@@ -38,7 +38,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         return;
       }
       final String email = jwtTokenUtils.extractEmail(token);
-      final UserDetails loadedUser = userDetailsService.loadUserByUsername(email);
+      final User loadedUser = (User) userDetailsService.loadUserByUsername(email);
+      loadedUser.setAccessToken(token);
       final UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
           loadedUser, null, loadedUser.getAuthorities());
 
@@ -46,7 +47,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
       log.info("Token verified");
     } else {
       log.info("Token not found");
-      filterChain.doFilter(request, response);
     }
+    filterChain.doFilter(request, response);
   }
 }
