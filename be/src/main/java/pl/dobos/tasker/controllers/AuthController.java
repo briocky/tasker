@@ -3,6 +3,7 @@ package pl.dobos.tasker.controllers;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -32,7 +33,9 @@ public class AuthController {
       HttpServletResponse response) {
     RegisterResponse registerResponse = authService.register(request);
     response.addCookie(registerResponse.getRefreshTokenCookie());
-    return ResponseEntity.created(null).body(registerResponse);
+    return ResponseEntity
+        .created(URI.create("/api/users/" + registerResponse.getUserId()))
+        .body(registerResponse);
   }
 
   @PostMapping("/login")

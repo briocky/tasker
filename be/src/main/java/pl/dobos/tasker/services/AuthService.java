@@ -42,6 +42,7 @@ public class AuthService {
     return RegisterResponse.builder()
         .token(tokenService.getAccessToken(savedUser))
         .refreshTokenCookie(refreshTokenCookie)
+        .userId(savedUser.getId())
         .build();
   }
 

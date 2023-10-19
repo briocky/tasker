@@ -22,4 +22,7 @@ public class RegisterResponse {
 
   @JsonIgnore
   Cookie refreshTokenCookie;
+
+  @JsonIgnore
+  Long userId;
 }
