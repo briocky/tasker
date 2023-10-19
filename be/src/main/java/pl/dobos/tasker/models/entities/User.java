@@ -8,7 +8,10 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
@@ -53,7 +56,7 @@ public class User implements UserDetails {
 
   String password;
 
-  boolean isEnabled;
+  boolean enabled;
 
   @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
   List<Role> roles;
@@ -63,6 +66,17 @@ public class User implements UserDetails {
 
   @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "owner")
   RefreshToken refreshToken;
+
+  @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+  @JoinTable(
+      name = "users_tasks_categories",
+      joinColumns = @JoinColumn(name = "user_id"),
+      inverseJoinColumns = @JoinColumn(name = "tasks_category_id")
+  )
+  List<TasksCategory> tasksCategories;
+
+  @OneToMany(mappedBy = "sender")
+  List<Invitation> invitations;
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -99,6 +113,6 @@ public class User implements UserDetails {
 
   @Override
   public boolean isEnabled() {
-    return isEnabled;
+    return enabled;
   }
 }

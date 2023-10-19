@@ -13,5 +13,7 @@ public interface UserMapper {
   @Mapping(target = "accessToken", ignore = true)
   @Mapping(target = "refreshToken", ignore = true)
   @Mapping(target = "authorities", ignore = true)
+  @Mapping(target = "tasksCategories", ignore = true)
+  @Mapping(target = "invitations", ignore = true)
   User getUser(pl.dobos.tasker.models.dtos.User source);
 }
