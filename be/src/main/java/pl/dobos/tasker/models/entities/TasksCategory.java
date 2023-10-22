@@ -12,7 +12,10 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,6 +26,8 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Getter @Setter
 @FieldDefaults(level = PRIVATE)
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class TasksCategory {
 
   @Id
@@ -33,10 +38,13 @@ public class TasksCategory {
   String description;
   String iconUrl;
   @ManyToMany(mappedBy = "tasksCategories")
-  List<User> members;
+  @Builder.Default
+  List<User> members = new ArrayList<>();
   @ManyToOne
   @JoinColumn(name = "owner_id")
   User owner;
   @OneToMany(mappedBy = "tasksCategory")
-  List<Task> tasks;
+  @Builder.Default
+  List<Task> tasks = new ArrayList<>();
+  boolean shared;
 }

@@ -18,8 +18,10 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,6 +35,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @NoArgsConstructor
 @Getter @Setter
 @FieldDefaults(level = PRIVATE)
+@EqualsAndHashCode
 public class User implements UserDetails {
 
   @Id
@@ -59,7 +62,7 @@ public class User implements UserDetails {
   boolean enabled;
 
   @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-  List<Role> roles;
+  List<Role> roles = new ArrayList<>();
 
   @Transient
   String accessToken;
@@ -73,10 +76,10 @@ public class User implements UserDetails {
       joinColumns = @JoinColumn(name = "user_id"),
       inverseJoinColumns = @JoinColumn(name = "tasks_category_id")
   )
-  List<TasksCategory> tasksCategories;
+  List<TasksCategory> tasksCategories = new ArrayList<>();
 
   @OneToMany(mappedBy = "sender")
-  List<Invitation> invitations;
+  List<Invitation> invitations = new ArrayList<>();
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
