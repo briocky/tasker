@@ -1,9 +1,113 @@
-import Image from 'next/image'
+"use client";
+import Container from "@mui/material/Container";
+import Box from '@mui/material/Box/Box';
+import Typography from '@mui/material/Typography/Typography';
+import Link from 'next/link';
+import Button from '@mui/material/Button/Button';
+import Grid from "@mui/material/Grid/Grid";
+import Card from "@mui/material/Card/Card";
+import CardContent from "@mui/material/CardContent/CardContent";
+import {useTheme} from "@mui/material";
+
+
+const features = [
+  {
+    title: 'Task Organization',
+    description: 'Easily organize your tasks into categories for better management.'
+  },
+  {
+    title: 'Priority Setting',
+    description: 'Set priorities for your tasks and focus on what matters the most.'
+  },
+  {
+    title: 'Productivity Boost',
+    description: 'Increase your productivity with our intuitive task management solution.'
+  }
+]
+
+const usersComments = [
+  "I've never been more organized in my life. This app is a game-changer!",
+  "Task Manager helped me prioritize my work and achieve my goals."
+]
 
 export default function Home() {
+  const theme = useTheme();
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      Hello world!
-    </main>
+      <Container component='main' maxWidth={false} disableGutters sx={{textAlign: 'center'}}>
+        <Box sx={{display: 'flex', justifyContent: 'center', backgroundColor: '#CDF5FD42'}}>
+          <Box sx={{maxWidth: 'md', py: '4em', textAlign: 'center'}}>
+            <Typography variant="h4" gutterBottom>
+              Your Task, Your Priority
+            </Typography>
+            <Typography variant="subtitle1" color="textSecondary" paragraph>
+              Simplify your life with our task management app. Organize your tasks, set priorities,
+              and stay productive.
+            </Typography>
+            <Button variant="contained" color={'primary'} size="large" sx={{mt: '1em'}}>
+              Get Started
+            </Button>
+          </Box>
+        </Box>
+
+        <Box
+            sx={{display: 'flex', justifyContent: 'center', backgroundColor: '#BD165711'}}>
+          <Box sx={{maxWidth: 'md', py: '4em', textAlign: 'center'}}>
+            <Typography variant="h5">
+              Key Features
+            </Typography>
+            <Grid container mt={1} spacing={4}>
+              {features.map((feature) => (
+                  <Grid item xs={12} sm={4}>
+                    <Card
+                        sx={{p: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center'}}>
+                      <Typography variant="h6">{feature.title}</Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        {feature.description}
+                      </Typography>
+                    </Card>
+                  </Grid>
+              ))}
+            </Grid>
+          </Box>
+        </Box>
+
+        <Box
+            sx={{display: 'flex', justifyContent: 'center', backgroundColor: '#CDF5FD42'}}>
+          <Box sx={{maxWidth: 'md', py: '4em', textAlign: 'center'}}>
+            <Typography variant="h5">
+              What Users Say
+            </Typography>
+            <Grid container mt={1} spacing={4}>
+              {usersComments.map((comment) => (
+                  <Grid item xs={12} sm={6}>
+                    <Card
+                        sx={{p: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', backgroundColor: 'primary'}}>
+                      <CardContent>
+                        <Typography variant="body1" color="inherit">
+                          "{comment}"
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+              ))}
+            </Grid>
+          </Box>
+        </Box>
+
+        <Box
+            sx={{display: 'flex', justifyContent: 'center', backgroundColor: '#BD165711'}}>
+          <Box sx={{maxWidth: 'md', py: '4em', textAlign: 'center'}}>
+            <Typography variant="h5" fontWeight={'bold'} gutterBottom>
+              Ready to Get Started?
+            </Typography>
+            <Link href={'/register'}>
+              <Button variant="contained" color="primary" size="large" sx={{mt: '1em'}}>
+                Sign Up Now
+              </Button>
+            </Link>
+          </Box>
+        </Box>
+      </Container>
   )
 }

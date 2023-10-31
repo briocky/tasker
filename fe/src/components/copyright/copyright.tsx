@@ -4,7 +4,7 @@ import * as React from "react";
 
 export default function Copyright(props: any) {
   return (
-      <Typography mb={4} variant="body2" color="text.secondary" align="center" {...props}>
+      <Typography py={2} variant="body2" color="text.secondary" align="center" {...props}>
         {'Copyright © '}
         <Link color="inherit" href="/">
           Tasker
