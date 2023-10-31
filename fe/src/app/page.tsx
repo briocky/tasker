@@ -44,9 +44,11 @@ export default function Home() {
               Simplify your life with our task management app. Organize your tasks, set priorities,
               and stay productive.
             </Typography>
-            <Button variant="contained" color={'primary'} size="large" sx={{mt: '1em'}}>
-              Get Started
-            </Button>
+            <Link href={'/categories/my-categories'}>
+              <Button variant="contained" color={'primary'} size="large" sx={{mt: '1em'}}>
+                Get Started
+              </Button>
+            </Link>
           </Box>
         </Box>
 
@@ -58,7 +60,7 @@ export default function Home() {
             </Typography>
             <Grid container mt={1} spacing={4}>
               {features.map((feature) => (
-                  <Grid item xs={12} sm={4}>
+                  <Grid key={feature.title} item xs={12} sm={4}>
                     <Card
                         sx={{p: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center'}}>
                       <Typography variant="h6">{feature.title}</Typography>
@@ -79,8 +81,8 @@ export default function Home() {
               What Users Say
             </Typography>
             <Grid container mt={1} spacing={4}>
-              {usersComments.map((comment) => (
-                  <Grid item xs={12} sm={6}>
+              {usersComments.map((comment, idx: number) => (
+                  <Grid key={idx} item xs={12} sm={6}>
                     <Card
                         sx={{p: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', backgroundColor: 'primary'}}>
                       <CardContent>
@@ -101,7 +103,7 @@ export default function Home() {
             <Typography variant="h5" fontWeight={'bold'} gutterBottom>
               Ready to Get Started?
             </Typography>
-            <Link href={'/register'}>
+            <Link href={'/auth/register'}>
               <Button variant="contained" color="primary" size="large" sx={{mt: '1em'}}>
                 Sign Up Now
               </Button>
