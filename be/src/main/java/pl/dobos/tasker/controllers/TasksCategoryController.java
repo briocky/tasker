@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,8 +24,9 @@ import pl.dobos.tasker.services.TasksCategoryService;
 @RestController
 @RequestMapping("/api/tasks-category")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000")
 @Validated
-public class TasksCategoryController {
+class TasksCategoryController {
 
   private final TasksCategoryService tasksCategoryService;
 

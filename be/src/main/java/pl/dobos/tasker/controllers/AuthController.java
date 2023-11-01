@@ -7,6 +7,7 @@ import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +24,8 @@ import pl.dobos.tasker.services.TokenService;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
-public class AuthController {
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+class AuthController {
 
   private final AuthService authService;
   private final TokenService tokenService;

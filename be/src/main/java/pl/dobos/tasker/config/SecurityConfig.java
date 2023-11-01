@@ -28,8 +28,6 @@ public class SecurityConfig {
         .requestMatchers("/api/auth/**").permitAll()
         .anyRequest().authenticated());
 
-    http.formLogin(Customizer.withDefaults()).httpBasic(Customizer.withDefaults());
-
     http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
     http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
