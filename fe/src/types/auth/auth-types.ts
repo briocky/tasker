@@ -8,6 +8,8 @@ type LoginDto = {
 type UserDto = {
   firstName: string | undefined;
   lastName: string | undefined;
+  age: number | undefined;
+  iconUrl: string | undefined;
   email: string | undefined;
   password: string | undefined;
   confirmPassword: string | undefined;
