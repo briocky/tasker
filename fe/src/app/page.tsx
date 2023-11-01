@@ -7,8 +7,7 @@ import Button from '@mui/material/Button/Button';
 import Grid from "@mui/material/Grid/Grid";
 import Card from "@mui/material/Card/Card";
 import CardContent from "@mui/material/CardContent/CardContent";
-import {useTheme} from "@mui/material";
-
+import Image from 'next/image'
 
 const features = [
   {
@@ -31,7 +30,6 @@ const usersComments = [
 ]
 
 export default function Home() {
-  const theme = useTheme();
 
   return (
       <Container component='main' maxWidth={false} disableGutters sx={{textAlign: 'center'}}>
@@ -50,6 +48,11 @@ export default function Home() {
               </Button>
             </Link>
           </Box>
+          <Box component={'div'} display={'flex'} alignItems={'center'}>
+            <Image src={'/task_image.jpg'} alt={'Task Management'}
+                   style={{borderRadius: 222, boxShadow: '0 0 5px black', marginLeft: 24}}
+                   width={250} height={250}/>
+          </Box>
         </Box>
 
         <Box
@@ -62,7 +65,13 @@ export default function Home() {
               {features.map((feature) => (
                   <Grid key={feature.title} item xs={12} sm={4}>
                     <Card
-                        sx={{p: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center'}}>
+                        sx={{
+                          p: 3,
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          textAlign: 'center'
+                        }}>
                       <Typography variant="h6">{feature.title}</Typography>
                       <Typography variant="body2" color="textSecondary">
                         {feature.description}
@@ -82,9 +91,16 @@ export default function Home() {
             </Typography>
             <Grid container mt={1} spacing={4}>
               {usersComments.map((comment, idx: number) => (
-                  <Grid key={idx} item xs={12} sm={6}>
+                  <Grid key={comment} item xs={12} sm={6}>
                     <Card
-                        sx={{p: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', backgroundColor: 'primary'}}>
+                        sx={{
+                          p: 3,
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          textAlign: 'center',
+                          backgroundColor: 'primary'
+                        }}>
                       <CardContent>
                         <Typography variant="body1" color="inherit">
                           "{comment}"
