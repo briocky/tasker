@@ -14,5 +14,10 @@ public interface TaskMapper {
   List<Task> getTaskList(List<pl.dobos.tasker.models.entities.Task> source);
 
   @Mapping(target = "id", ignore = true)
+  @Mapping(target = "tasksCategory", source = "id")
   pl.dobos.tasker.models.entities.Task getTask(Task source);
+
+  default pl.dobos.tasker.models.entities.TasksCategory getTasksCategory(Long id) {
+    return pl.dobos.tasker.models.entities.TasksCategory.builder().id(id).build();
+  }
 }
