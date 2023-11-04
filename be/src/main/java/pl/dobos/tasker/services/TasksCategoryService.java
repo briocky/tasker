@@ -1,5 +1,7 @@
 package pl.dobos.tasker.services;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -79,16 +81,23 @@ public class TasksCategoryService {
   }
 
   public TasksCategory createTasksCategory(TasksCategory tasksCategory) {
+    final String zoneId = "Europe/Warsaw";
     if (tasksCategory == null) {
       throw new IllegalArgumentException("Tasks category cannot be null");
     }
 
     User currentUser = currentUserService.getCurrentUserDetails();
-    pl.dobos.tasker.models.entities.TasksCategory newTaskCategory =
-        tasksCategoryMapper.getTasksCategory(tasksCategory);
-    newTaskCategory.setOwner(currentUser);
-    pl.dobos.tasker.models.entities.TasksCategory savedTasksCategory =
-        tasksCategoryRepository.save(newTaskCategory);
+
+    var mappedTaskCategory = tasksCategoryMapper.getTasksCategory(tasksCategory);
+
+    mappedTaskCategory.setOwner(currentUser);
+    mappedTaskCategory.getTasks().forEach(task -> {
+      task.setCreatedAt(LocalDateTime.now(ZoneId.of(zoneId)));
+      task.setTasksCategory(mappedTaskCategory);
+    });
+
+    var savedTasksCategory = tasksCategoryRepository.save(mappedTaskCategory);
+
     return tasksCategoryMapper.getTasksCategory(savedTasksCategory);
   }
 

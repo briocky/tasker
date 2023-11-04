@@ -2,6 +2,7 @@ package pl.dobos.tasker.models.entities;
 
 import static lombok.AccessLevel.PRIVATE;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -43,7 +44,7 @@ public class TasksCategory {
   @ManyToOne
   @JoinColumn(name = "owner_id")
   User owner;
-  @OneToMany(mappedBy = "tasksCategory")
+  @OneToMany(mappedBy = "tasksCategory", cascade = CascadeType.ALL)
   @Builder.Default
   List<Task> tasks = new ArrayList<>();
   boolean shared;

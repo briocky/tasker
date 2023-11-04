@@ -7,14 +7,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import pl.dobos.tasker.models.entities.TasksCategory;
 
 @Getter @Setter
 @Builder
 @FieldDefaults(level = PRIVATE)
 public class Task {
 
-  TasksCategory tasksCategory;
+  Long id;
+  Long taskCategoryId;
   String description;
   LocalDateTime createdAt;
   LocalDateTime deadline;
