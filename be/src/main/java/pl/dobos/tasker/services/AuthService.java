@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.dobos.tasker.exceptions.AuthException;
+import pl.dobos.tasker.exceptions.UserNotFoundException;
 import pl.dobos.tasker.mappers.UserMapper;
 import pl.dobos.tasker.models.dtos.LoginRequest;
 import pl.dobos.tasker.models.dtos.LoginResponse;
@@ -49,7 +50,7 @@ public class AuthService {
   public LoginResponse login(LoginRequest request) {
 
     User userByEmail = userRepository.findByEmail(request.getEmail())
-        .orElseThrow(() -> new AuthException("User not found"));
+        .orElseThrow(() -> new UserNotFoundException("User not found"));
 
     if (!passwordEncoder.matches(request.getPassword(), userByEmail.getPassword())) {
       throw new AuthException("Wrong password");
