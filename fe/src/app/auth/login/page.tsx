@@ -34,7 +34,7 @@ export default function Login() {
     .then((response: AuthResponse) => {
       dispatch(setAuthentication(true));
       setToken(response.token);
-      router.push('/notes/my-notes');
+      router.push('/categories/my-categories');
     })
   };
 

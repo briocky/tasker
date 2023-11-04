@@ -19,8 +19,8 @@ import Link from 'next/link';
 
 const pages = [
   {
-    name: 'My Tasks',
-    url: '/tasks/my-tasks'
+    name: 'My Categories',
+    url: '/categories/my-categories'
   },
   {
     name: 'Favourite',
