@@ -114,7 +114,7 @@ export default function MyCategories() {
                       sx={{textDecoration: 'underline'}}>
             My categories
           </Typography>
-          <Link href={'/category/add'}>
+          <Link href={'/categories/create'}>
             <Button startIcon={<AddIcon/>} variant={'outlined'}>
               Add category
             </Button>

@@ -33,7 +33,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Entity
 @Table(name = "users")
 @NoArgsConstructor
-@Getter @Setter
+@Getter
+@Setter
 @FieldDefaults(level = PRIVATE)
 @EqualsAndHashCode
 public class User implements UserDetails {

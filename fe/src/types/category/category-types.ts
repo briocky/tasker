@@ -1,14 +1,14 @@
-import {TaskDto} from "@/types/task/task-types";
+import { TaskDto } from '@/types/task/task-types';
 
 type CategoryDto = {
-  id: number;
+  id: number | undefined;
   name: string;
   description: string;
   iconUrl: string;
-  membersIds: number[];
-  ownerId: number;
+  membersEmails: string[];
+  ownerId: number | undefined;
   tasks: TaskDto[];
   shared: boolean;
-}
+};
 
-export type { CategoryDto }
+export type { CategoryDto };

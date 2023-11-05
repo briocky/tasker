@@ -17,7 +17,7 @@ public class TasksCategory {
   String name;
   String description;
   String iconUrl;
-  List<Long> membersIds;
+  List<String> membersEmails;
   Long ownerId;
   List<Task> tasks;
   boolean shared;

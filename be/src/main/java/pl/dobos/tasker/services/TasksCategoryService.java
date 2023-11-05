@@ -12,6 +12,7 @@ import pl.dobos.tasker.mappers.TasksCategoryMapper;
 import pl.dobos.tasker.models.dtos.TasksCategory;
 import pl.dobos.tasker.models.entities.User;
 import pl.dobos.tasker.repositories.TasksCategoryRepository;
+import pl.dobos.tasker.repositories.UserRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +23,9 @@ public class TasksCategoryService {
   private static final String ID_CANNOT_BE_NULL_MESSAGE = "Id cannot be null";
 
   private final TasksCategoryRepository tasksCategoryRepository;
+  private final UserRepository userRepository;
   private final CurrentUserService currentUserService;
+  private final InvitationService invitationService;
   private final TasksCategoryMapper tasksCategoryMapper;
 
   public TasksCategory getTasksCategory(Long id) {
@@ -90,6 +93,8 @@ public class TasksCategoryService {
 
     var mappedTaskCategory = tasksCategoryMapper.getTasksCategory(tasksCategory);
 
+    addMembersToTaskCategory(mappedTaskCategory, tasksCategory.getMembersEmails());
+
     mappedTaskCategory.setOwner(currentUser);
     mappedTaskCategory.getTasks().forEach(task -> {
       task.setCreatedAt(LocalDateTime.now(ZoneId.of(zoneId)));
@@ -97,6 +102,8 @@ public class TasksCategoryService {
     });
 
     var savedTasksCategory = tasksCategoryRepository.save(mappedTaskCategory);
+    savedTasksCategory.getMembers().forEach(member ->
+        invitationService.sendCategoryInvitation(member, savedTasksCategory, currentUser));
 
     return tasksCategoryMapper.getTasksCategory(savedTasksCategory);
   }
@@ -118,6 +125,12 @@ public class TasksCategoryService {
 
     pl.dobos.tasker.models.entities.TasksCategory mapped = tasksCategoryMapper.getTasksCategory(
         tasksCategory);
+
+    addMembersToTaskCategory(mapped, tasksCategory.getMembersEmails());
+    mapped.getMembers().stream()
+        .filter(member -> !dbCategory.getMembers().contains(member))
+        .forEach(member ->
+            invitationService.sendCategoryInvitation(member, dbCategory, dbCategory.getOwner()));
 
     pl.dobos.tasker.models.entities.TasksCategory updatedCategory = dbCategory.toBuilder()
         .tasks(mapped.getTasks())
@@ -150,6 +163,18 @@ public class TasksCategoryService {
       throw new TasksCategoryNotFoundException(
           String.format(UNAUTHORIZED_ACCESS_MESSAGE, fetchedCategory.getId()));
     }
+  }
+
+  private void addMembersToTaskCategory(
+      pl.dobos.tasker.models.entities.TasksCategory mappedTaskCategory,
+      List<String> membersEmails) {
+    membersEmails.forEach(email ->
+        userRepository.findByEmail(email).ifPresent(member -> {
+              if (!member.getId().equals(currentUserService.getCurrentUserId())) {
+                mappedTaskCategory.getMembers().add(member);
+              }
+            }
+        ));
   }
 
   private TasksCategory getTasksCategoryIfUserIsMember(
