@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pl.dobos.tasker.exceptions.TasksCategoryNotFoundException;
@@ -74,13 +73,27 @@ public class TasksCategoryService {
   }
 
   public List<TasksCategory> getAllTasksCategories(Pageable pageRequest) {
+    if (pageRequest == null) {
+      throw new IllegalArgumentException("Page request cannot be null");
+    }
+
     final boolean shared = false;
-    return getAllTasksCategories(pageRequest, shared);
+    final User loggedInUser = currentUserService.getCurrentUserDetails();
+
+    return tasksCategoryRepository.findAllByOwnerAndShared(loggedInUser, shared, pageRequest)
+        .map(tasksCategoryMapper::getTasksCategory)
+        .toList();
   }
 
   public List<TasksCategory> getAllSharedTasksCategories(Pageable pageRequest) {
-    final boolean shared = true;
-    return getAllTasksCategories(pageRequest, shared);
+    if (pageRequest == null) {
+      throw new IllegalArgumentException("Page request cannot be null");
+    }
+
+    final User loggedInUser = currentUserService.getCurrentUserDetails();
+    var sharedCategoriesForUser = tasksCategoryRepository.findSharedCategoriesForUser(
+        loggedInUser, pageRequest);
+    return sharedCategoriesForUser.map(tasksCategoryMapper::getTasksCategory).toList();
   }
 
   public TasksCategory createTasksCategory(TasksCategory tasksCategory) {
@@ -187,16 +200,5 @@ public class TasksCategoryService {
       throw new TasksCategoryNotFoundException(
           String.format(UNAUTHORIZED_ACCESS_MESSAGE, fetchedCategory.getId()));
     }
-  }
-
-  private List<TasksCategory> getAllTasksCategories(Pageable pageRequest, boolean shared) {
-    if (pageRequest == null) {
-      throw new IllegalArgumentException("Page request cannot be null");
-    }
-
-    final User loggedInUser = currentUserService.getCurrentUserDetails();
-    Page<pl.dobos.tasker.models.entities.TasksCategory> tasksCategories =
-        tasksCategoryRepository.findAllByOwnerAndShared(loggedInUser, shared, pageRequest);
-    return tasksCategories.map(tasksCategoryMapper::getTasksCategory).toList();
   }
 }

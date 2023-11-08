@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import pl.dobos.tasker.exceptions.AuthException;
+import pl.dobos.tasker.exceptions.InvitationNotFoundException;
 import pl.dobos.tasker.exceptions.TasksCategoryNotFoundException;
 import pl.dobos.tasker.exceptions.UserNotFoundException;
 
@@ -31,6 +32,13 @@ public class GeneralExceptionAdvice {
   @ResponseStatus(HttpStatus.NOT_FOUND)
   public String handleTasksCategoryNotFoundException(TasksCategoryNotFoundException e) {
     log.error("Tasks category not found exception: {}", e.getMessage());
+    return e.getMessage();
+  }
+
+  @ExceptionHandler(InvitationNotFoundException.class)
+  @ResponseStatus(HttpStatus.NOT_FOUND)
+  public String handleInvitationNotFoundException(InvitationNotFoundException e) {
+    log.error("Invitation not found exception: {}", e.getMessage());
     return e.getMessage();
   }
 }

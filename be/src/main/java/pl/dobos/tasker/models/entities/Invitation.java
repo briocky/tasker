@@ -7,7 +7,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -32,7 +31,7 @@ public class Invitation {
   Long id;
   @ManyToOne
   User sender;
-  @OneToOne
+  @ManyToOne
   User receiver;
   @ManyToOne
   TasksCategory tasksCategory;
