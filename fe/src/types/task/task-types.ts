@@ -1,5 +1,6 @@
 type TaskDto = {
-  id: number;
+  id: number | undefined;
+  taskCategoryId: number | undefined;
   description: string;
   createdAt: Date;
   deadline: Date | undefined;

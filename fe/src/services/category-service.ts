@@ -24,4 +24,11 @@ async function addCategory(category: CategoryDto) {
   });
 }
 
-export { getCategories, getSharedCategories, addCategory };
+async function getCategory(id: number) {
+  const getEndpoint = `api/tasks-category/${id}`;
+  return await authAxios.get<CategoryDto>(getEndpoint).then((response) => {
+    return response.data;
+  });
+}
+
+export { getCategory, getCategories, getSharedCategories, addCategory };
