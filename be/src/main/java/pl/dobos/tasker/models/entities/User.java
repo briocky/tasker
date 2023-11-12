@@ -72,15 +72,14 @@ public class User implements UserDetails {
   RefreshToken refreshToken;
 
   @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-  @JoinTable(
-      name = "users_tasks_categories",
-      joinColumns = @JoinColumn(name = "user_id"),
-      inverseJoinColumns = @JoinColumn(name = "tasks_category_id")
-  )
+  @JoinTable(name = "users_tasks_categories", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "tasks_category_id"))
   List<TasksCategory> tasksCategories = new ArrayList<>();
 
   @OneToMany(mappedBy = "sender")
   List<Invitation> invitations = new ArrayList<>();
+
+  @OneToMany(mappedBy = "author")
+  List<TaskComment> comments = new ArrayList<>();
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {

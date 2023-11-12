@@ -15,6 +15,7 @@ public interface TaskMapper {
 
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "tasksCategory", source = "taskCategoryId")
+  @Mapping(target = "comments", ignore = true)
   pl.dobos.tasker.models.entities.Task getTask(Task source);
 
   default pl.dobos.tasker.models.entities.TasksCategory getTasksCategory(Long id) {

@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
@@ -17,7 +19,8 @@ import lombok.experimental.FieldDefaults;
 @Entity
 @Table(name = "task_comments")
 @NoArgsConstructor
-@Getter @Setter
+@Getter
+@Setter
 @FieldDefaults(level = PRIVATE)
 public class TaskComment {
 
@@ -27,4 +30,10 @@ public class TaskComment {
   Long id;
   String text;
   LocalDateTime createdAt;
+  @ManyToOne
+  @JoinColumn(name = "task_id")
+  Task task;
+  @ManyToOne
+  @JoinColumn(name = "author_id")
+  User author;
 }

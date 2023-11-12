@@ -36,7 +36,8 @@ export default function AddTask({ handleAddTask, sending }: { handleAddTask: (ta
 			createdAt: new Date(),
 			description: description,
 			deadline: dueDate?.toDate(),
-			priority: priority
+			priority: priority,
+			comments: undefined
 		};
 		handleAddTask(task);
 	};

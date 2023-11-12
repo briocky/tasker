@@ -15,6 +15,7 @@ public interface UserMapper {
   @Mapping(target = "authorities", ignore = true)
   @Mapping(target = "tasksCategories", ignore = true)
   @Mapping(target = "invitations", ignore = true)
+  @Mapping(target = "comments", ignore = true)
   User getUser(pl.dobos.tasker.models.dtos.User source);
 
   @Mapping(target = "confirmPassword", ignore = true)

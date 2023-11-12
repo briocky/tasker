@@ -2,7 +2,8 @@ package pl.dobos.tasker.models.dtos;
 
 import static lombok.AccessLevel.PRIVATE;
 
-import java.util.List;
+import java.time.LocalDateTime;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,14 +13,11 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @Builder
 @FieldDefaults(level = PRIVATE)
-public class TasksCategory {
+public class Comment {
 
-  Long id;
-  String name;
-  String description;
-  String iconUrl;
-  List<String> membersEmails;
-  Long ownerId;
-  List<Task> tasks;
-  boolean shared;
+    Long id;
+    String text;
+    LocalDateTime createdAt;
+    String authorEmail;
+    Long taskId;
 }

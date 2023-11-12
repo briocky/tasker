@@ -22,6 +22,9 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider/LocalizationProvider';
 import dayjs from 'dayjs';
 import { addNewTaskToCategory, completeTask } from '@/services/task-service';
+import CommentsDialog from '@/components/comments-dialog/commentsDialog';
+import { addCommentToTask, getTaskComments } from '@/services/comment-service';
+import { CommentDto } from '@/types/comment/comment-types';
 
 export default function CategoryDetails({
 	params
@@ -30,12 +33,10 @@ export default function CategoryDetails({
 		id: number;
 	};
 }) {
-	const [tasks, setTasks] = useState([
-		{ id: 1, text: 'Task 1', completed: false },
-		{ id: 2, text: 'Task 2', completed: false }
-	]);
 	const [category, setCategory] = useState<CategoryDto | null>(null);
 	const [sending, setSending] = useState<boolean>(false);
+	const [commentsShown, setCommentsShown] = useState<boolean>(false);
+	const [commentShownTaskId, setCommentShownTaskId] = useState<number | null>(null);
 
 	useEffect(() => {
 		getCategory(params.id).then(category => setCategory(category));
@@ -64,6 +65,28 @@ export default function CategoryDetails({
 		// );
 	};
 
+	const handleShowComments = (taskId: number | undefined) => {
+		if (!taskId || !category) return;
+
+		getTaskComments(taskId).then(comments => {
+			const taskToUpdate = category.tasks.find(task => task.id === taskId);
+			if (!taskToUpdate) return;
+			taskToUpdate.comments = comments;
+			const updatedCategory = {
+				...category,
+				tasks: [...category.tasks]
+			};
+			setCategory(updatedCategory);
+		});
+		setCommentsShown(true);
+		setCommentShownTaskId(taskId);
+	};
+
+	const handleCloseComments = () => {
+		setCommentsShown(false);
+		setCommentShownTaskId(null);
+	};
+
 	const handleCategoryEdit = () => {
 		// Dodaj kod obsługujący edycję kategorii
 	};
@@ -82,6 +105,32 @@ export default function CategoryDetails({
 			setCategory(updatedCategory);
 		});
 		setSending(false);
+	};
+
+	const handleAddComment = (comment: string, taskId: number) => {
+		if (!category) return;
+
+		const commentData: CommentDto = {
+			taskId: taskId,
+			text: comment,
+			createdAt: new Date()
+		};
+
+		const taskToUpdate = category.tasks.find(task => task.id === taskId);
+		if (!taskToUpdate) return;
+
+		addCommentToTask(commentData).then(comment => {
+			if (!taskToUpdate.comments) taskToUpdate.comments = [];
+
+			taskToUpdate.comments.push(comment);
+
+			const updatedCategory: CategoryDto = {
+				...category,
+				tasks: [...category.tasks]
+			};
+
+			setCategory(updatedCategory);
+		});
 	};
 
 	if (!category) {
@@ -128,9 +177,26 @@ export default function CategoryDetails({
 										</IconButton>
 										<Typography sx={{ fontSize: 16 }}>{task.description}</Typography>
 									</Box>
-									<Button size="small" variant="outlined" startIcon={<InsertCommentIcon />}>
-										comments
-									</Button>
+									<Box>
+										<IconButton size="small" color="primary" onClick={() => handleShowComments(task.id)}>
+											<InsertCommentIcon sx={{ fontSize: 18 }} />
+										</IconButton>
+										{commentsShown && commentShownTaskId === task.id && task.comments && task.id && (
+											<CommentsDialog
+												taskId={task.id}
+												handleAddComment={handleAddComment}
+												comments={task.comments}
+												handleClose={handleCloseComments}
+												open={commentsShown}
+											/>
+										)}
+										<IconButton size="small" color="info">
+											<EditIcon sx={{ fontSize: 18 }} />
+										</IconButton>
+										<IconButton size="small" color="error">
+											<DeleteIcon sx={{ fontSize: 18 }} />
+										</IconButton>
+									</Box>
 								</Box>
 								{task.deadline && (
 									<Typography sx={{ color: 'grey' }} textAlign={'end'}>

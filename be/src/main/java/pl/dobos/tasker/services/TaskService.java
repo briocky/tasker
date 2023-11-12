@@ -17,6 +17,18 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final TaskMapper taskMapper;
 
+    public Task getTaskById(Long taskId) {
+        if (taskId == null || taskId < 0) {
+            throw new IllegalArgumentException("TaskId cannot be null and must be positive!");
+        }
+
+        var taskById = taskRepository.findById(taskId)
+                .orElseThrow(() -> new TaskNotFoundException(
+                        String.format("Task cannot be found!")));
+
+        return taskMapper.getTask(taskById);
+    }
+
     public Task addNewTaskToCategory(Task newTask) {
         var saved = taskRepository.save(taskMapper.getTask(newTask));
         return taskMapper.getTask(saved);
