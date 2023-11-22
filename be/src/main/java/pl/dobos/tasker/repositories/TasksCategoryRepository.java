@@ -14,6 +14,6 @@ public interface TasksCategoryRepository extends JpaRepository<TasksCategory, Lo
 
   Page<TasksCategory> findAllByOwnerAndShared(User owner, boolean shared, Pageable pageable);
 
-  @Query("SELECT tc FROM TasksCategory tc JOIN tc.members m WHERE (tc.shared = true AND m = :user) OR tc.owner = :user")
+  @Query("SELECT tc FROM TasksCategory tc WHERE (tc.owner = :user or :user MEMBER OF tc.members) AND tc.shared = true")
   Page<TasksCategory> findSharedCategoriesForUser(@Param("user") User user, Pageable pageable);
 }
