@@ -84,7 +84,9 @@ export default function MyCategories() {
           <Grid container spacing={2}>
             {sharedCategories.map((category) => (
               <Grid key={category.id} item xs={12} sm={6} md={4}>
-                <Category category={category} />
+                <Link href={`/categories/details/${category.id}`} style={{ textDecoration: 'none' }}>
+                  <Category category={category} />
+                </Link>
               </Grid>
             ))}
           </Grid>
